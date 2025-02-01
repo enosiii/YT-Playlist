@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://enosiii.github.io/PWA/YTP/yt1-icon-512x512.png" rel="icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="https://enosiii.github.io/PWA/YTP/manifest.json">
+    <title>YT Playlist 🎧</title>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <style>
+        /* General styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #1a1a1a;
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 10px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Playlist buttons */
+        #buttons {
+            margin: 20px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            max-width: 90%;
+        }
+
+        button {
+            background: linear-gradient(135deg, #ff0080, #8000ff);
+            border: none;
+            padding: 12px 20px;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0px 4px 10px rgba(255, 0, 128, 0.4);
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #8000ff, #ff0080);
+            transform: scale(1.1);
+            box-shadow: 0px 6px 15px rgba(255, 0, 128, 0.6);
+        }
+
+        /* YouTube Player */
+        #player {
+            margin-top: 20px;
+            width: 90%;
+            max-width: 800px;
+            height: 450px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0px 4px 20px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Playlist navigation */
+        #playlist-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        #playlist-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            text-shadow: 0px 0px 8px rgba(255, 255, 255, 0.5);
+        }
+
+        .nav-button {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .nav-button:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            button {
+                font-size: 0.9rem;
+                padding: 10px 16px;
+            }
+
+            #player {
+                height: 300px;
+            }
+
+            #playlist-title {
+                font-size: 1rem;
+            }
+
+            .nav-button {
+                padding: 8px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h2>YouTube Playlist 🎧</h2>
+
+    <!-- Playlist Buttons -->
+    <div id="buttons"></div>
+
+    <!-- YouTube IFrame Player -->
+    <div id="player"></div>
+
+    <!-- Playlist Controls -->
+    <div id="playlist-controls">
+        <span class="nav-button" onclick="prevTrack()">« Previous</span>
+        <span id="playlist-title">Playlist: None</span>
+        <span class="nav-button" onclick="nextTrack()">Next »</span>
+    </div>
+  
+  
+    <script src="playlist.js"></script> <!-- Load the playlist data -->
+
+  <!-- Add the service worker registration script -->
+  <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('https://enosiii.github.io/PWA/YTP/service-worker.js')
+          .then((registration) => {
+            console.log('Service Worker registered with scope:', registration.scope);
+          })
+          .catch((error) => {
+            console.error('Service Worker registration failed:', error);
+          });
+      }
+    </script>
+
+    <script>
+        var player;
+        var isPlayerReady = false;
+        var currentPlaylist = "";
+        var currentPlaylistTitle = "";
+        var currentIndex = 0;
+        var totalVideos = 50; // Default count
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '360',
+                width: '640',
+                playerVars: {
+                    autoplay: 1,
+                    controls: 1
+                },
+                events: {
+                    'onReady': function () {
+                        isPlayerReady = true;
+                        loadFirstPlaylist(); // Auto-start first playlist
+                    },
+                    'onStateChange': onPlayerStateChange // Handle looping
+                }
+            });
+        }
+
+        function loadPlaylist(playlistId, title, count = 50) {
+            if (!isPlayerReady) return;
+
+            totalVideos = parseInt(count);
+            let randomIndex = Math.floor(Math.random() * totalVideos);
+
+            player.stopVideo();
+            setTimeout(() => {
+                player.loadPlaylist({
+                    listType: 'playlist',
+                    list: playlistId,
+                    index: randomIndex,
+                    suggestedQuality: "high"
+                });
+            }, 300);
+
+            currentPlaylist = playlistId;
+            currentPlaylistTitle = title;
+            currentIndex = randomIndex;
+            updatePlaylistLabel();
+        }
+
+        function updatePlaylistLabel() {
+            document.getElementById("playlist-title").textContent = `Playlist: ${currentPlaylistTitle}`;
+        }
+
+        function prevTrack() {
+            if (!isPlayerReady || !currentPlaylist) return;
+            player.previousVideo();
+        }
+
+        function nextTrack() {
+            if (!isPlayerReady || !currentPlaylist) return;
+            player.nextVideo();
+        }
+
+        function onPlayerStateChange(event) {
+            if (event.data === YT.PlayerState.ENDED) {
+                let nextIndex = Math.floor(Math.random() * totalVideos);
+                player.playVideoAt(nextIndex); // Always random next video
+            }
+        }
+
+        function loadFirstPlaylist() {
+            if (playlists.length > 0) {
+                let firstPlaylist = playlists[0];
+                loadPlaylist(firstPlaylist.id, firstPlaylist.title, firstPlaylist.count);
+            }
+        }
+
+        window.onload = function() {
+            const buttonContainer = document.getElementById('buttons');
+
+            playlists.forEach(playlist => {
+                const btn = document.createElement("button");
+                btn.textContent = playlist.title;
+                btn.onclick = () => loadPlaylist(playlist.id, playlist.title, playlist.count);
+                buttonContainer.appendChild(btn);
+            });
+        };
+    </script>
+</body>
+</html>
