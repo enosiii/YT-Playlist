@@ -158,91 +158,125 @@
     </script>
 
     <script>
-        var player;
-        var isPlayerReady = false;
-        var currentPlaylist = "";
-        var currentPlaylistTitle = "";
-        var currentIndex = 0;
-        var totalVideos = 50; // Default count
+    var player;
+    var isPlayerReady = false;
+    var currentPlaylist = "";
+    var currentPlaylistTitle = "";
+    var currentIndex = 0;
+    var totalVideos = 50; // Default count
 
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('player', {
-                height: '360',
-                width: '640',
-                playerVars: {
-                    autoplay: 1,
-                    controls: 1
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+            height: '360',
+            width: '640',
+            playerVars: {
+                autoplay: 1,
+                controls: 1
+            },
+            events: {
+                'onReady': function () {
+                    isPlayerReady = true;
+                    loadFirstPlaylist(); // Auto-start first playlist
+                    setupMediaSession(); // Set up media session after player is ready
                 },
-                events: {
-                    'onReady': function () {
-                        isPlayerReady = true;
-                        loadFirstPlaylist(); // Auto-start first playlist
-                    },
-                    'onStateChange': onPlayerStateChange // Handle looping
+                'onStateChange': onPlayerStateChange // Handle looping
+            }
+        });
+    }
+
+    function setupMediaSession() {
+        if ('mediaSession' in navigator) {
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: "YouTube Playlist",
+                artist: "Background Player",
+                album: "PWA Music",
+                artwork: [
+                    { src: "https://enosiii.github.io/PWA/YTP/yt1-icon-512x512.png", sizes: "512x512", type: "image/png" }
+                ]
+            });
+
+            navigator.mediaSession.setActionHandler("play", () => {
+                if (player && player.playVideo) {
+                    player.playVideo();
                 }
             });
-        }
 
-        function loadPlaylist(playlistId, title, count = 50) {
-            if (!isPlayerReady) return;
-
-            totalVideos = parseInt(count);
-            let randomIndex = Math.floor(Math.random() * totalVideos);
-
-            player.stopVideo();
-            setTimeout(() => {
-                player.loadPlaylist({
-                    listType: 'playlist',
-                    list: playlistId,
-                    index: randomIndex,
-                    suggestedQuality: "high"
-                });
-            }, 300);
-
-            currentPlaylist = playlistId;
-            currentPlaylistTitle = title;
-            currentIndex = randomIndex;
-            updatePlaylistLabel();
-        }
-
-        function updatePlaylistLabel() {
-            document.getElementById("playlist-title").textContent = `Playlist: ${currentPlaylistTitle}`;
-        }
-
-        function prevTrack() {
-            if (!isPlayerReady || !currentPlaylist) return;
-            player.previousVideo();
-        }
-
-        function nextTrack() {
-            if (!isPlayerReady || !currentPlaylist) return;
-            player.nextVideo();
-        }
-
-        function onPlayerStateChange(event) {
-            if (event.data === YT.PlayerState.ENDED) {
-                let nextIndex = Math.floor(Math.random() * totalVideos);
-                player.playVideoAt(nextIndex); // Always random next video
-            }
-        }
-
-        function loadFirstPlaylist() {
-            if (playlists.length > 0) {
-                let firstPlaylist = playlists[0];
-                loadPlaylist(firstPlaylist.id, firstPlaylist.title, firstPlaylist.count);
-            }
-        }
-
-        window.onload = function() {
-            const buttonContainer = document.getElementById('buttons');
-
-            playlists.forEach(playlist => {
-                const btn = document.createElement("button");
-                btn.textContent = playlist.title;
-                btn.onclick = () => loadPlaylist(playlist.id, playlist.title, playlist.count);
-                buttonContainer.appendChild(btn);
+            navigator.mediaSession.setActionHandler("pause", () => {
+                if (player && player.pauseVideo) {
+                    player.pauseVideo();
+                }
             });
-        };
-    </script>
+
+            navigator.mediaSession.setActionHandler("nexttrack", () => {
+                nextTrack();
+            });
+
+            navigator.mediaSession.setActionHandler("previoustrack", () => {
+                prevTrack();
+            });
+        }
+    }
+
+    function loadPlaylist(playlistId, title, count = 50) {
+        if (!isPlayerReady) return;
+
+        totalVideos = parseInt(count);
+        let randomIndex = Math.floor(Math.random() * totalVideos);
+
+        player.stopVideo();
+        setTimeout(() => {
+            player.loadPlaylist({
+                listType: 'playlist',
+                list: playlistId,
+                index: randomIndex,
+                suggestedQuality: "high"
+            });
+        }, 300);
+
+        currentPlaylist = playlistId;
+        currentPlaylistTitle = title;
+        currentIndex = randomIndex;
+        updatePlaylistLabel();
+    }
+
+    function updatePlaylistLabel() {
+        document.getElementById("playlist-title").textContent = `Playlist: ${currentPlaylistTitle}`;
+    }
+
+    function prevTrack() {
+        if (!isPlayerReady || !currentPlaylist) return;
+        player.previousVideo();
+    }
+
+    function nextTrack() {
+        if (!isPlayerReady || !currentPlaylist) return;
+        player.nextVideo();
+    }
+
+    function onPlayerStateChange(event) {
+        if (event.data === YT.PlayerState.ENDED) {
+            let nextIndex = Math.floor(Math.random() * totalVideos);
+            player.playVideoAt(nextIndex); // Always random next video
+        }
+    }
+
+    function loadFirstPlaylist() {
+        if (playlists.length > 0) {
+            let firstPlaylist = playlists[0];
+            loadPlaylist(firstPlaylist.id, firstPlaylist.title, firstPlaylist.count);
+        }
+    }
+
+    window.onload = function() {
+        const buttonContainer = document.getElementById('buttons');
+
+        playlists.forEach(playlist => {
+            const btn = document.createElement("button");
+            btn.textContent = playlist.title;
+            btn.onclick = () => loadPlaylist(playlist.id, playlist.title, playlist.count);
+            buttonContainer.appendChild(btn);
+        });
+    };
+</script>
 </body>
 </html>
