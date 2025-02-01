@@ -144,19 +144,6 @@
   
     <script src="playlist.js"></script> <!-- Load the playlist data -->
 
-  <!-- Add the service worker registration script -->
-  <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('https://enosiii.github.io/PWA/YTP/service-worker.js')
-          .then((registration) => {
-            console.log('Service Worker registered with scope:', registration.scope);
-          })
-          .catch((error) => {
-            console.error('Service Worker registration failed:', error);
-          });
-      }
-    </script>
-
     <script>
     var player;
     var isPlayerReady = false;
@@ -278,5 +265,18 @@
         });
     };
 </script>
+  <!-- Add the service worker registration script -->
+  <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('https://enosiii.github.io/PWA/YTP/service-worker.js')
+          .then((registration) => {
+            console.log('Service Worker registered with scope:', registration.scope);
+          })
+          .catch((error) => {
+            console.error('Service Worker registration failed:', error);
+          });
+      }
+    </script>
+
 </body>
 </html>
