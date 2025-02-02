@@ -38,3 +38,35 @@ self.addEventListener('activate', (event) => {
     })
   );
 });
+
+// Handle notification click events
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const action = event.action;
+
+  if (action.startsWith('playlist')) {
+    const playlistIndex = parseInt(action.replace('playlist', '')) - 1;
+    event.waitUntil(
+      clients.matchAll({ type: 'window' }).then((clientList) => {
+        if (clientList.length > 0) {
+          const client = clientList[0];
+          client.focus();
+          client.postMessage({ type: 'switchPlaylist', index: playlistIndex });
+        }
+      })
+    );
+  }
+});
+
+// Handle messages from the app
+self.addEventListener('message', (event) => {
+  if (event.data.type === 'updateNotification') {
+    event.waitUntil(
+      self.registration.showNotification("YouTube Playlist 🎧", {
+        body: "Switch playlists from the notification",
+        icon: "https://enosiii.github.io/PWA/YTP/yt1-icon-512x512.png",
+        actions: event.data.actions
+      })
+    );
+  }
+});
