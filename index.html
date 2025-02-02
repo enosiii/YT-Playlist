@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link href="https://enosiii.github.io/PWA/YTP/yt1-icon-512x512.png" rel="icon">
+    <link href="yt1-icon-512x512.png" rel="icon">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="manifest" href="https://enosiii.github.io/PWA/YTP/manifest.json">
+    <link rel="manifest" href="manifest.json">
     <title>YT Playlist 🎧</title>
     <script src="https://www.youtube.com/iframe_api"></script>
     <style>
@@ -163,7 +163,7 @@
     <!-- Add the service worker registration script -->
     <script>
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('https://enosiii.github.io/PWA/YTP/service-worker.js')
+            navigator.serviceWorker.register('service-worker.js')
                 .then((registration) => {
                     console.log('Service Worker registered with scope:', registration.scope);
                 })
