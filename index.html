@@ -100,20 +100,6 @@
             background: rgba(255, 255, 255, 0.4);
         }
 
-        /* PiP button */
-        #pip-button {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease-in-out;
-            margin-top: 15px;
-        }
-
-        #pip-button:hover {
-            background: rgba(255, 255, 255, 0.4);
-        }
-
         /* Responsive Design */
         @media (max-width: 768px) {
             h2 {
@@ -148,9 +134,6 @@
     <!-- YouTube IFrame Player -->
     <div id="player"></div>
 
-    <!-- PiP Button -->
-    <button id="pip-button" onclick="togglePiP()">Toggle PiP</button>
-
     <!-- Playlist Controls -->
     <div id="playlist-controls">
         <span class="nav-button" onclick="prevTrack()">« Previous</span>
@@ -180,7 +163,6 @@
         var currentPlaylistTitle = "";
         var currentIndex = 0;
         var totalVideos = 50; // Default count
-        var isPiPActive = false;
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
@@ -231,24 +213,6 @@
                 navigator.mediaSession.setActionHandler("previoustrack", () => {
                     prevTrack();
                 });
-            }
-        }
-
-        function togglePiP() {
-            const iframe = document.querySelector('iframe');
-            if (!iframe || !document.pictureInPictureEnabled) {
-                alert("Picture-in-Picture is not supported for YouTube embeds. Please use the YouTube app for PiP functionality.");
-                return;
-            }
-
-            if (document.pictureInPictureElement) {
-                document.exitPictureInPicture();
-            } else {
-                iframe.requestPictureInPicture()
-                    .catch(error => {
-                        console.log('Error entering PiP mode:', error);
-                        alert("Picture-in-Picture is not supported for YouTube embeds.");
-                    });
             }
         }
 
@@ -312,13 +276,6 @@
                 buttonContainer.appendChild(btn);
             });
         };
-
-        // Pause video when app goes into the background
-        document.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'hidden' && player && player.pauseVideo) {
-                player.pauseVideo();
-            }
-        });
     </script>
 </body>
 </html>
