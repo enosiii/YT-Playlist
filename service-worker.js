@@ -5,7 +5,10 @@ const urlsToCache = [
   'manifest.json',
   'yt1-icon-192x192.png',
   'yt1-icon-512x512.png',
-  'https://www.youtube.com/iframe_api' // Adding YouTube iframe API for caching
+  'https://www.youtube.com/iframe_api',
+  'pyramid.css',
+  'music.css',
+  'https://enosiii.github.io/YT-Playlist/'// Adding YouTube iframe API for caching
 ];
 
 // Install event - Caching essential resources
