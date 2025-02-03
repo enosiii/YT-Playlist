@@ -272,7 +272,7 @@
                     artist: "Background Player",
                     album: "PWA Music",
                     artwork: [
-                        { src: "https://enosiii.github.io/PWA/YTP/yt1-icon-512x512.png", sizes: "512x512", type: "image/png" }
+                        { src: "yt1-icon-512x512.png", sizes: "512x512", type: "image/png" }
                     ]
                 });
 
@@ -307,12 +307,12 @@
                     const playlistButtons = playlists.map((playlist, index) => ({
                         title: playlist.title,
                         action: `playlist${index + 1}`,
-                        icon: `https://enosiii.github.io/PWA/YTP/yt1-icon-192x192.png`
+                        icon: `yt1-icon-192x192.png`
                     }));
 
                     registration.showNotification("YouTube Playlist 🎧", {
                         body: "Switch playlists from the notification",
-                        icon: "https://enosiii.github.io/PWA/YTP/yt1-icon-512x512.png",
+                        icon: "yt1-icon-512x512.png",
                         actions: playlistButtons
                     });
                 });
