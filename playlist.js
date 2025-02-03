@@ -1,4 +1,6 @@
 
+
+//================================
 //playlist.js
 
 const playlists = [
@@ -12,8 +14,13 @@ const playlists = [
 
     { title: "Rock Songs", id: "PLplXQ2cg9B_pqNuu7_tVKgFGhrL7IWIYf", count: " 100"},
 
+    { title: "MAKI Playlist", id: "PLiy0XOfUv4hFQUEIeE53y4M7vErN0oq8c", count: " 3"},
+
     { title: "Ms. Rachel Baby", id: "PLEeIyWKd-HQ5vnV6HLlGojLo-_THu-VSm", count: " 3"},
 
     { title: "Ms. Rachel Nursery Rhymes", id: "PLEeIyWKd-HQ4pxSdPQyWTD7TsMqbdXZVi", count: " 8"}
 
 ];
+
+
+
