@@ -23,10 +23,12 @@
             justify-content: center;
             min-height: 100vh;
         }
-img.logo {
+
+        img.logo {
             width: 6rem;
             height: 6rem;
         }
+
         h2 {
             font-size: 3rem;
             margin-top: 20px;
@@ -36,61 +38,35 @@ img.logo {
         }
 
         /* Playlist buttons */
-#buttons {
-    margin: 20px 0;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px; /* Increased spacing to accommodate larger buttons */
-    max-width: 90%;
-}
+        #buttons {
+            margin: 20px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            max-width: 90%;
+        }
 
-button {
-    background: linear-gradient(135deg, #ff0080, #8000ff);
-    border: none;
-    padding: 20px 30px; /* Doubled padding */
-    color: white;
-    font-size: 2rem; /* Doubled font size */
-    cursor: pointer;
-    border-radius: 20px; /* Slightly increased for better proportion */
-    transition: all 0.3s ease-in-out;
-    box-shadow: 0px 8px 20px rgba(255, 0, 128, 0.4); /* Adjusted shadow */
-}
+        button {
+            background: linear-gradient(135deg, #ff0080, #8000ff);
+            border: none;
+            padding: 20px 30px;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            border-radius: 16px;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0px 8px 20px rgba(255, 0, 128, 0.4);
+        }
 
-button:hover {
-    background: linear-gradient(135deg, #8000ff, #ff0080);
-    transform: scale(1.1);
-    box-shadow: 0px 12px 30px rgba(255, 0, 128, 0.6);
-}
+        button:hover {
+            background: linear-gradient(135deg, #8000ff, #ff0080);
+            transform: scale(1.1);
+            box-shadow: 0px 12px 30px rgba(255, 0, 128, 0.6);
+        }
 
         /* YouTube Player */
-        #/* Playlist buttons */
-#buttons {
-    margin: 20px 0;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px; /* Increased spacing to accommodate larger buttons */
-    max-width: 90%;
-}
-
-button {
-    background: linear-gradient(135deg, #ff0080, #8000ff);
-    border: none;
-    padding: 20px 30px; /* Doubled padding */
-    color: white;
-    font-size: 2rem; /* Doubled font size */
-    cursor: pointer;
-    border-radius: 16px; /* Slightly increased for better proportion */
-    transition: all 0.3s ease-in-out;
-    box-shadow: 0px 8px 20px rgba(255, 0, 128, 0.4); /* Adjusted shadow */
-}
-
-button:hover {
-    background: linear-gradient(135deg, #8000ff, #ff0080);
-    transform: scale(1.1);
-    box-shadow: 0px 12px 30px rgba(255, 0, 128, 0.6);
-}player {
+        #player {
             margin-top: 20px;
             width: 90%;
             max-width: 10666px;
@@ -98,6 +74,7 @@ button:hover {
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0px 8px 20px rgba(255, 255, 255, 0.2);
+            display: none; /* Hidden by default */
         }
 
         /* Playlist navigation */
@@ -158,16 +135,18 @@ button:hover {
             }
 
             .nav-button {
-                
-              font-size: 1rem;
+                font-size: 1rem;
             }
+        }
+
+        /* Loading Spinner */
+        .pyramid-loader {
+            display: none; /* Hidden by default */
         }
     </style>
 </head>
 <body>
-  
-  
-  <img src="yt1-icon-512x512.png" alt="Logo" class="logo">
+    <img src="yt1-icon-512x512.png" alt="Logo" class="logo">
     <h2>YouTube Playlist 🎧</h2>
 
     <!-- Playlist Buttons -->
@@ -187,20 +166,17 @@ button:hover {
     <div id="current-video-details">
         Index Number/Total Number: Video Title
     </div>
-  
-    
-  
-  <!-- From Uiverse.io by Anita3761520000 --> 
-<div class="pyramid-loader">
-  <div class="wrapper">
-    <span class="side side1"></span>
-    <span class="side side2"></span>
-    <span class="side side3"></span>
-    <span class="side side4"></span>
-    <span class="shadow"></span>
-  </div>
-</div>
 
+    <!-- Loading Spinner -->
+    <div class="pyramid-loader">
+        <div class="wrapper">
+            <span class="side side1"></span>
+            <span class="side side2"></span>
+            <span class="side side3"></span>
+            <span class="side side4"></span>
+            <span class="shadow"></span>
+        </div>
+    </div>
 
     <script src="playlist.js"></script> <!-- Load the playlist data -->
 
@@ -224,8 +200,14 @@ button:hover {
         var currentPlaylistTitle = "";
         var currentIndex = 0;
         var totalVideos = 50; // Default count
+        var retryCount = 0;
+        const maxRetries = 3;
 
         function onYouTubeIframeAPIReady() {
+            initializePlayer();
+        }
+
+        function initializePlayer() {
             player = new YT.Player('player', {
                 height: '360',
                 width: '640',
@@ -237,6 +219,8 @@ button:hover {
                 events: {
                     'onReady': function () {
                         isPlayerReady = true;
+                        document.getElementById('player').style.display = 'block'; // Show player
+                        document.querySelector('.pyramid-loader').style.display = 'none'; // Hide spinner
                         loadFirstPlaylist(); // Auto-start first playlist
                         setupMediaSession(); // Set up media session after player is ready
                     },
@@ -244,6 +228,19 @@ button:hover {
                     'onError': onPlayerError // Handle video errors
                 }
             });
+
+            // Retry mechanism if player fails to load
+            setTimeout(() => {
+                if (!isPlayerReady && retryCount < maxRetries) {
+                    retryCount++;
+                    console.log(`Retrying player initialization (Attempt ${retryCount})...`);
+                    initializePlayer();
+                } else if (!isPlayerReady) {
+                    console.error('Failed to initialize YouTube player after multiple attempts.');
+                    document.querySelector('.pyramid-loader').style.display = 'none'; // Hide spinner
+                    alert('Failed to load YouTube player. Please refresh the page.');
+                }
+            }, 5000); // Retry after 5 seconds
         }
 
         function setupMediaSession() {
@@ -376,6 +373,9 @@ button:hover {
                 btn.onclick = () => loadPlaylist(playlist.id, playlist.title, playlist.count);
                 buttonContainer.appendChild(btn);
             });
+
+            // Show loading spinner while initializing player
+            document.querySelector('.pyramid-loader').style.display = 'block';
         };
     </script>
 </body>
