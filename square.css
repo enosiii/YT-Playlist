@@ -1,0 +1,84 @@
+/* From Uiverse.io by mobinkakei
+.loader {
+  width: 150px;
+  height: 150px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+*/
+
+.square-loader {
+  margin-top: 20px;
+  position: relative;
+  width: 90%;
+  max-width: 10666px;
+  height: 600px;
+  display: block;
+  transform-style: preserve-3d;
+  transform: rotateX(-20deg);
+  border-radius: 15px;
+  box-shadow: 0px 8px 20px rgba(255, 255, 255, 0.2);
+}
+
+
+.wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.square-loader .wrapper {
+  width: 150px;
+  height: 150px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
+
+.loader_cube {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 30px;
+}
+
+.loader_cube--glowing {
+  z-index: 2;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.loader_cube--color {
+  z-index: 1;
+  filter: blur(2px);
+  background: linear-gradient(135deg, #8000ff, #ff0080);
+  /*background: linear-gradient(135deg, #1afbf0, #da00ff);*/
+  animation: loadtwo 2.5s ease-in-out infinite;
+}
+
+@keyframes loadtwo {
+  50% {
+    transform: rotate(-270deg);
+  }
+}
+
+
+/* Responsive Design */
+        @media (max-width: 768px) {
+
+            .square-loader {
+                height: 300px;
+            }
+          
+          
+.square-loader .wrapper {
+  width: 100px;
+  height: 100px;
+}
+          
+        }
