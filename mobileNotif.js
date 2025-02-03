@@ -4,13 +4,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // Function to check if the user is in Mobile mode
   const isMobileMode = () => {
     // Check user agent for common mobile devices
-    const isMobileUserAgent = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    //const isMobileUserAgent = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
     // Check screen width (optional, for additional confirmation)
     const isSmallScreen = window.innerWidth <= 768; // Adjust the threshold as needed
 
     // Return true if either condition is met
-    return isMobileUserAgent || isSmallScreen;
+    return /*isMobileUserAgent ||*/ isSmallScreen;
   };
 
   // Check if the user is in Mobile mode
@@ -30,23 +30,23 @@ document.addEventListener('DOMContentLoaded', () => {
     notification.style.textAlign = 'center';  // Align the text in the center
     notification.innerHTML = `
       <strong>You are in Mobile mode</strong><br>
-      • In your browser settings, turn on "Desktop site" to enjoy listening in the background, even when your screen is off. Enjoy listening! ☺️
+      • In your browser settings, turn on "Desktop site" to enjoy listening in the background, even when your screen is off. Enjoy listening! ☺️<br>
     `;
 
     // Create the close button
 const closeBtn = document.createElement('button');
-closeBtn.textContent = '[✕]';  //[×][✕][⨉]
-closeBtn.style.position = 'absolute !important';
-closeBtn.style.top = '5px !important';
-closeBtn.style.right = '5px !important';
-closeBtn.style.background = '#00000000 !important'; // Transparent background
+closeBtn.textContent = 'CLOSE [✕]';  //[×][✕][⨉]
+closeBtn.style.position = 'absolute';
+closeBtn.style.top = '5px';
+closeBtn.style.right = '5px';
+closeBtn.style.backgroundColor = '#00000000 important'; // Transparent background
 closeBtn.style.border = 'none !important';
-closeBtn.style.fontSize = '18px !important';
-closeBtn.style.cursor = 'pointer !important';
+closeBtn.style.fontSize = '0.5rem';
+closeBtn.style.cursor = 'pointer';
 closeBtn.style.color = '#721c24 !important';
-closeBtn.style.borderRadius = '0 !important'; // Override any border-radius from global styles
-closeBtn.style.boxShadow = 'none !important'; // Remove any box shadow
-closeBtn.style.padding = '0 !important'; // Remove padding
+closeBtn.style.borderRadius = '10px'; // Override any border-radius from global styles
+closeBtn.style.boxShadow = 'none'; // Remove any box shadow
+closeBtn.style.padding = '5px'; // Remove padding
 closeBtn.style.transition = 'none !important'; // Disable transitions
 
     // Close button click event to remove the notification
@@ -61,3 +61,4 @@ closeBtn.style.transition = 'none !important'; // Disable transitions
     document.body.appendChild(notification);
   }
 });
+
