@@ -8,6 +8,7 @@ const urlsToCache = [
   'https://www.youtube.com/iframe_api',
   'square.css',
   'music.css',
+  'mobileNotif.js',
   'https://enosiii.github.io/YT-Playlist/'// Adding YouTube iframe API for caching
 ];
 
@@ -67,7 +68,7 @@ self.addEventListener('message', (event) => {
     event.waitUntil(
       self.registration.showNotification("YouTube Playlist 🎧", {
         body: "Switch playlists from the notification",
-        icon: "https://enosiii.github.io/PWA/YTP/yt1-icon-512x512.png",
+        icon: "yt1-icon-192x192.png",
         actions: event.data.actions
       })
     );
