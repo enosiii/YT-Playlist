@@ -34,16 +34,20 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
 
     // Create the close button
-    const closeBtn = document.createElement('button');
-    closeBtn.textContent = '[✕]';  //[×][✕][⨉]
-    closeBtn.style.position = 'absolute';
-    closeBtn.style.top = '5px';
-    closeBtn.style.right = '5px';
-    closeBtn.style.background = '#00000000';
-    closeBtn.style.border = 'none';
-    closeBtn.style.fontSize = '18px';
-    closeBtn.style.cursor = 'pointer';
-    closeBtn.style.color = '#721c24';
+const closeBtn = document.createElement('button');
+closeBtn.textContent = '[✕]';  //[×][✕][⨉]
+closeBtn.style.position = 'absolute !important';
+closeBtn.style.top = '5px !important';
+closeBtn.style.right = '5px !important';
+closeBtn.style.background = '#00000000 !important'; // Transparent background
+closeBtn.style.border = 'none !important';
+closeBtn.style.fontSize = '18px !important';
+closeBtn.style.cursor = 'pointer !important';
+closeBtn.style.color = '#721c24 !important';
+closeBtn.style.borderRadius = '0 !important'; // Override any border-radius from global styles
+closeBtn.style.boxShadow = 'none !important'; // Remove any box shadow
+closeBtn.style.padding = '0 !important'; // Remove padding
+closeBtn.style.transition = 'none !important'; // Disable transitions
 
     // Close button click event to remove the notification
     closeBtn.addEventListener('click', () => {
