@@ -6,7 +6,7 @@ const urlsToCache = [
   'yt1-icon-192x192.png',
   'yt1-icon-512x512.png',
   'https://www.youtube.com/iframe_api',
-  'pyramid.css',
+  'square.css',
   'music.css',
   'https://enosiii.github.io/YT-Playlist/'// Adding YouTube iframe API for caching
 ];
