@@ -268,9 +268,9 @@
         function setupMediaSession() {
             if ('mediaSession' in navigator) {
                 navigator.mediaSession.metadata = new MediaMetadata({
-                    title: "YouTube Playlist",
-                    artist: "Background Player",
-                    album: "PWA Music",
+                    title: "DaddYmon Playlist",
+                    artist: "Babymon Player",
+                    album: "Mommymon Music",
                     artwork: [
                         { src: "yt1-icon-512x512.png", sizes: "512x512", type: "image/png" }
                     ]
@@ -331,7 +331,7 @@
                     listType: 'playlist',
                     list: playlistId,
                     index: randomIndex,
-                    suggestedQuality: "high"
+                    suggestedQuality: "low"
                 });
             }, 300);
 
